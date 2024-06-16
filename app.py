@@ -12,7 +12,7 @@ def hello_world():
 
 @app.route('/extractnews', methods=['GET'])
 def extract_article_route():
-    url = request.args.get('url')
+    url = request.args.get('q')
     if not url:
         return jsonify({"error": "Missing URL parameter"}), 400
 
