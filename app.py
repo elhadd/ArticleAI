@@ -10,6 +10,32 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello from Flask!'
 
+@app.route('/aigenerate', methods=['GET'])
+def create_article(input_text):
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-003",  # Usa il modello GPT-4 se disponibile
+            prompt=f"Write a detailed article based on the following text:\n\n{input_text}\n\nArticle:",
+            max_tokens=1024,  # Numero massimo di token nell'articolo generato
+            temperature=0.7,  # Controlla la creatività del modello
+            n=1,
+            stop=None
+        )
+
+        # Prendi il testo generato dal modello
+        article = response.choices[0].text.strip()
+        return article
+    
+    except Exception as e:
+        return f"Error creating article: {e}"
+
+# Esempio di utilizzo della funzione
+input_text = """
+Five foreign tourists on the Greek islands are now missing or dead.
+Body of American tourist found on scenic Greek island, latest in a string of missing or dead foreigners
+An American tourist was found dead Sunday on a beach on the Greek Island of Mathraki, the latest in a series of foreign tourists found dead or reported missing in the scenic vacation paradise in the past week, authorities said.
+""";
+
 @app.route('/extractnews', methods=['GET'])
 def extract_article_route():
     url = request.args.get('q')
